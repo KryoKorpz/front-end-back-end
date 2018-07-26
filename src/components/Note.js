@@ -18,7 +18,6 @@ class Note extends Component {
     }
 
     render() {
-        console.log(this.props)
         return (
             <div>
                 <Card style={{display: 'flex'}}>
@@ -52,7 +51,7 @@ class Note extends Component {
     toggleDelete = () => {
         this.toggle()
         this.delete()
-        this.props.history('/')
+        this.props.history.push('/')
     }
         
     delete = () => {
