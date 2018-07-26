@@ -18,7 +18,7 @@ const localURL = `http://localhost:5000`
 export const getNotes = () => async dispatch => {
     try {
         dispatch({ type: LOADING })
-        const {data} = await axios.get(`${localURL}/notes`)
+        const {data} = await axios.get(`${herokuURL}/notes`)
         dispatch({ type: GET_NOTES, payload: data })
         dispatch({ type: HIDE_LOADING })
     } catch (error) {
@@ -28,7 +28,7 @@ export const getNotes = () => async dispatch => {
 
 export const createNote = (note) => {
     return (dispatch) => {
-        axios.post(`${localURL}/notes`, note)
+        axios.post(`${herokuURL}/notes`, note)
         .then((response) => {
             dispatch({
                 type : CREATE_NOTE,
@@ -42,7 +42,7 @@ export const createNote = (note) => {
 }
 export const updateNote = (note, id) => {
     return (dispatch) => {
-        axios.put(`${localURL}/notes/update/${id}`, note)
+        axios.put(`${herokuURL}/notes/update/${id}`, note)
         .then(() => {
             dispatch({
                 type : UPDATE_NOTE,
@@ -58,7 +58,7 @@ export const updateNote = (note, id) => {
 
 export const deleteNote = (id) => {
     return (dispatch) => {
-        axios.delete(`${localURL}/notes/delete/${id}`)
+        axios.delete(`${herokuURL}/notes/delete/${id}`)
         .then(() => {
             dispatch({
                 type : DELETE_NOTE,
@@ -71,7 +71,7 @@ export const deleteNote = (id) => {
 }
 export const signUp = (user) => {
     return (dispatch) => {
-        axios.post(`${localURL}/user/register`, user)
+        axios.post(`${herokuURL}/user/register`, user)
         .then((response) => {
             dispatch({
                 type : SIGNUP,
@@ -85,7 +85,7 @@ export const signUp = (user) => {
 }
 export const login = (user) => {
     return (dispatch) => {
-        axios.put(`${localURL}/user/login`, user)
+        axios.put(`${herokuURL}/user/login`, user)
         .then((response) => {
             console.log(response)
             const id = response.data.user._id
@@ -109,7 +109,7 @@ export const getUser = () => async dispatch => {
     const id = localStorage.getItem('id')
     try {
         dispatch({ type: LOADING })
-        const {data} = await axios.get(`${localURL}/user/${id}`, {headers: {Authorization: token}})
+        const {data} = await axios.get(`${herokuURL}/user/${id}`, {headers: {Authorization: token}})
         dispatch({ type: GET_USER, payload: data })
         dispatch({ type: HIDE_LOADING })
     } catch (error) {
