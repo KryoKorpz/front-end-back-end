@@ -10,7 +10,7 @@ export const LOADING = 'LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
-export const GET_USERS = 'GET_USERS';
+export const GET_USER = 'GET_USER';
 
 const herokuURL = `https://fathomless-bastion-61109.herokuapp.com`;
 const localURL = `http://localhost:5000`
@@ -18,7 +18,7 @@ const localURL = `http://localhost:5000`
 export const getNotes = () => async dispatch => {
     try {
         dispatch({ type: LOADING })
-        const {data} = await axios.get(`${herokuURL}/notes`)
+        const {data} = await axios.get(`${localURL}/notes`)
         dispatch({ type: GET_NOTES, payload: data })
         dispatch({ type: HIDE_LOADING })
     } catch (error) {
@@ -28,7 +28,7 @@ export const getNotes = () => async dispatch => {
 
 export const createNote = (note) => {
     return (dispatch) => {
-        axios.post(`${herokuURL}/notes`, note)
+        axios.post(`${localURL}/notes`, note)
         .then((response) => {
             dispatch({
                 type : CREATE_NOTE,
@@ -42,7 +42,7 @@ export const createNote = (note) => {
 }
 export const updateNote = (note, id) => {
     return (dispatch) => {
-        axios.put(`${herokuURL}/notes/update/${id}`, note)
+        axios.put(`${localURL}/notes/update/${id}`, note)
         .then(() => {
             dispatch({
                 type : UPDATE_NOTE,
@@ -58,8 +58,8 @@ export const updateNote = (note, id) => {
 
 export const deleteNote = (id) => {
     return (dispatch) => {
-        axios.delete(`${herokuURL}/notes/delete/${id}`)
-        .then((response) => {
+        axios.delete(`${localURL}/notes/delete/${id}`)
+        .then(() => {
             dispatch({
                 type : DELETE_NOTE,
             })
@@ -71,7 +71,7 @@ export const deleteNote = (id) => {
 }
 export const signUp = (user) => {
     return (dispatch) => {
-        axios.post(`${herokuURL}/users/register`, user)
+        axios.post(`${localURL}/user/register`, user)
         .then((response) => {
             dispatch({
                 type : SIGNUP,
@@ -85,10 +85,13 @@ export const signUp = (user) => {
 }
 export const login = (user) => {
     return (dispatch) => {
-        axios.put(`${herokuURL}/users/login`, user)
+        axios.put(`${localURL}/user/login`, user)
         .then((response) => {
+            console.log(response)
+            const id = response.data.user._id
             const token = response.data.token
             localStorage.setItem('token', token)
+            localStorage.setItem('id', id)
             dispatch({
                 type : LOGIN,
                 payload: response.data.user
@@ -101,12 +104,13 @@ export const login = (user) => {
     }
 }
 
-export const getUsers = () => async dispatch => {
+export const getUser = () => async dispatch => {
     const token = localStorage.getItem('token')
+    const id = localStorage.getItem('id')
     try {
         dispatch({ type: LOADING })
-        const {data} = await axios.get(`${herokuURL}/users`, {headers: {Authorization: token}})
-        dispatch({ type: GET_USERS, payload: data })
+        const {data} = await axios.get(`${localURL}/user/${id}`, {headers: {Authorization: token}})
+        dispatch({ type: GET_USER, payload: data })
         dispatch({ type: HIDE_LOADING })
     } catch (error) {
         dispatch({ type: ERROR, error})

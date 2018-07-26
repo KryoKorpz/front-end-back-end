@@ -26,10 +26,10 @@ class Login extends Component {
     event.preventDefault();
     this.props.login(this.state);
     this.setState({ username: '', password: ''});
-    this.props.history.push('/users');
   }
-
+  
   render() {
+    const userId = localStorage.getItem('id')
       return (
           <div className='createNote'>
             <Form>
@@ -39,6 +39,7 @@ class Login extends Component {
                 <Button color='info' onClick={ this.handleSubmit }>Login</Button>
               </FormGroup>
             </Form>
+            <Link to ={`/user/${userId}`}><Button color='success'>To User Home</Button></Link>
           </div>
       );
     }
